@@ -3,9 +3,6 @@ from sympy.matrices import *
 import numpy as np
 import math
 
-from draw_qrcode import trueAdcmB
-
-
 def triad2d(a,b):
     """a and b should be vectors containing the coordinates of the
         x,y and z-axis, all w.r.t the same reference frame
@@ -72,14 +69,14 @@ def triad2d(a,b):
     B = ReferenceFrame('B')
 
     trueAdcmO = Matrix([
-        [-0.5, -(np.sqrt(3)/2), 0],
-        [(np.sqrt(3)/2), -0.5, 0],
+        [0.5, -(np.sqrt(3)/2), 0],
+        [(np.sqrt(3)/2), 0.5, 0],
         [0, 0, 1]
     ])
 
     trueBdcmO = Matrix([
-        [-(np.sqrt(3)/2), -0.5, 0],
-        [0.5, -(np.sqrt(3)/2), 0],
+        [(np.sqrt(3)/2), -0.5, 0],
+        [0.5, (np.sqrt(3)/2), 0],
         [0, 0, 1]
     ])
 
@@ -118,13 +115,12 @@ def triad2d(a,b):
 
     Ea2b = dot(vectorA2B, truevectorA2B)
     Eb2a = dot(vectorB2A, truevectorB2A)
-    print(Ea2b,Eb2a)
+
     EangleA2B = math.degrees(math.acos(dot(vectorA2B, truevectorA2B)))
     EangleB2A = math.degrees(math.acos(dot(vectorB2A, truevectorB2A)))
 
-
-
     #               Print Results
+    print("Triad function results")
     print("trueAdcmB :", trueAdcmB)
     print("AdcmB:", AdcmB)
     print("trueBdcmA", trueBdcmA)
@@ -136,9 +132,7 @@ def triad2d(a,b):
     print("Error matrix A2B : ", EdcmBA)
     print("Error angle A2B : ", EangleA2B)
     print("Error angle B2A : ", EangleB2A)
-
-
-    return AdcmB,trueAdcmB
+    return AdcmB,trueAdcmB,BdcmA,trueBdcmA
 
 
 

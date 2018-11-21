@@ -1,12 +1,12 @@
 import numpy as np
 import cv2
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
 import glob
 import time
 import os
 
-# Initial varaibles #
+# initialize the variables needed for camera calibration
 num_boards = 20
 pattern_size = (9, 7)
 
@@ -20,7 +20,6 @@ objp[:, :2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1, 2) * 
 # Arrays to store object points and image points from all images
 objpoints = []  # 3d points in real world
 imgpoints = []  # 2d points in image plane
-
 
 # Functions #
 
@@ -136,12 +135,17 @@ def draw_axis(mtx, dist):
     cv2.destroyAllWindows()
 
 
-# Calibrate camera
-calibrate_camera()
+def get_calibration_results():
+    """ returns the intrinsic camera matrix and distortion coefficients"""
+    # Calibrate camera if not yet calibrated
+    try:
+        calibration_result = np.load("data/calibration_result.npz")
+    except:
+        calibrate_camera()
+        calibration_result = np.load("data/calibration_result.npz")
 
-# Load calibration_result
-with np.load("data/calibration_result.npz") as X:
-    mtx, dist = [X[i] for i in ("mtx", "dist")]
+    # Load calibration_result
+    with calibration_result as X:
+        mtx, dist = [X[i] for i in ("mtx", "dist")]
 
-# Draw axis on each image
-draw_axis(mtx, dist)
+    return mtx, dist
